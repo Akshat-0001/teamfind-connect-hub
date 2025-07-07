@@ -18,6 +18,9 @@ import TeamChat from "./pages/TeamChat";
 import Search from "./pages/Search";
 import Settings from "./pages/Settings";
 import UserProfile from "./pages/UserProfile";
+import Notifications from "./pages/Notifications";
+import ProfileSetup from "./pages/ProfileSetup";
+import Suggestions from "./pages/Suggestions";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +51,7 @@ const App = () => (
           <Route path="/" element={<SplashScreen />} />
           <Route path="/onboarding" element={<OnboardingCarousel />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/profile-setup" element={<ProtectedRoute><ProfileSetup /></ProtectedRoute>} />
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route path="home" element={<Home />} />
             <Route path="profile" element={<Profile />} />
@@ -57,6 +61,8 @@ const App = () => (
             <Route path="search" element={<Search />} />
             <Route path="settings" element={<Settings />} />
             <Route path="user/:userId" element={<UserProfile />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="suggestions" element={<Suggestions />} />
           </Route>
           <Route path="/chat/:teamId" element={<ProtectedRoute><TeamChat /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />

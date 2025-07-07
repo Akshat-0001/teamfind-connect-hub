@@ -36,9 +36,11 @@ const AuthPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
   
   const navigate = useNavigate();
-  const { signIn, signUp, signInWithGoogle } = useAuth();
+  const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema)
@@ -112,6 +114,35 @@ const AuthPage = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!resetEmail) {
+      setError('Please enter your email address');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const { error } = await resetPassword(resetEmail);
+      
+      if (error) {
+        setError(error.message);
+      } else {
+        toast({
+          title: "Reset email sent!",
+          description: "Check your email for password reset instructions."
+        });
+        setShowForgotPassword(false);
+        setResetEmail('');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
       <Card className="w-full max-w-md glass-card">
@@ -139,7 +170,40 @@ const AuthPage = () => {
             </Alert>
           )}
 
-          {isLogin ? (
+          {showForgotPassword ? (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="resetEmail">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <Button
+                onClick={handleForgotPassword}
+                className="w-full btn-gradient"
+                disabled={loading}
+              >
+                {loading ? 'Sending...' : 'Send Reset Email'}
+              </Button>
+
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setShowForgotPassword(false)}
+                className="w-full"
+              >
+                Back to Login
+              </Button>
+            </div>
+          ) : isLogin ? (
             <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -182,6 +246,16 @@ const AuthPage = () => {
                     {loginForm.formState.errors.password.message}
                   </p>
                 )}
+              </div>
+
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Forgot your password?
+                </button>
               </div>
 
               <Button

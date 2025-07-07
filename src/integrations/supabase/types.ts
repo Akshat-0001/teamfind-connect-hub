@@ -36,6 +36,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          link: string | null
+          message: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          message: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          message?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -46,6 +79,7 @@ export type Database = {
           email: string
           full_name: string
           geeksforgeeks_url: string | null
+          gender: string | null
           github_url: string | null
           id: string
           interests: string[] | null
@@ -66,6 +100,7 @@ export type Database = {
           email: string
           full_name: string
           geeksforgeeks_url?: string | null
+          gender?: string | null
           github_url?: string | null
           id?: string
           interests?: string[] | null
@@ -86,6 +121,7 @@ export type Database = {
           email?: string
           full_name?: string
           geeksforgeeks_url?: string | null
+          gender?: string | null
           github_url?: string | null
           id?: string
           interests?: string[] | null
@@ -94,6 +130,36 @@ export type Database = {
           portfolio_url?: string | null
           skills?: string[] | null
           university?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      suggestions: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          title?: string
           updated_at?: string
           user_id?: string
         }

@@ -1,26 +1,28 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/hooks/useNotifications';
+import { useMobile } from '@/hooks/useMobile';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import PageTransition from '@/components/PageTransition';
 import { 
   Home, 
   User, 
   Settings, 
-  LogOut,
   MessageSquare,
-  Search
+  Search,
+  Bell
 } from 'lucide-react';
 
 const Layout = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
+  const { unreadCount } = useNotifications();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-  };
+  
+  // Initialize mobile hooks
+  useMobile();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -44,6 +46,19 @@ const Layout = () => {
           </Link>
 
           <div className="flex items-center space-x-2">
+            <Link to="/notifications">
+              <Button variant="ghost" size="icon" className="touch-target relative">
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center min-w-5"
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
             <Link to="/search">
               <Button variant="ghost" size="icon" className="touch-target">
                 <Search className="h-5 w-5" />

@@ -76,13 +76,40 @@ export const useAuth = () => {
   };
 
   const signInWithGoogle = async () => {
-    const redirectUrl = `${window.location.origin}/home`;
+    // For mobile apps, use a custom URL scheme or deep link
+    const redirectUrl = window.location.hostname === 'localhost' 
+      ? `${window.location.origin}/home`
+      : 'teamfind://auth/callback';
     
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: redirectUrl
       }
+    });
+    
+    return { data, error };
+  };
+
+  const resetPassword = async (email: string) => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`
+    });
+    
+    return { data, error };
+  };
+
+  const updatePassword = async (password: string) => {
+    const { data, error } = await supabase.auth.updateUser({
+      password: password
+    });
+    
+    return { data, error };
+  };
+
+  const updateEmail = async (email: string) => {
+    const { data, error } = await supabase.auth.updateUser({
+      email: email
     });
     
     return { data, error };
@@ -119,6 +146,9 @@ export const useAuth = () => {
     signIn,
     signInWithGoogle,
     signOut,
-    updateProfile
+    updateProfile,
+    resetPassword,
+    updatePassword,
+    updateEmail
   };
 };
